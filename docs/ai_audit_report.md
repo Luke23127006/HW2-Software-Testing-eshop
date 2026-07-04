@@ -248,13 +248,25 @@ That is a great call. Fixing the foundation of FR-03 before moving on to the nex
 ```
 
 ## Interaction X
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** [e.g., 2026-07-04 14:00]
+* **Name of the AI tool:** Gemini Pro (Antigravity)
+* **Date and time:** 2026-07-04 18:8
 * **Your prompt:** 
 ```markdown
+ Act as a strict Senior QA Tester. I need you to update the existing FR-03_domain_testing.md file based on a recent QA Audit. You suffered from contextual tunnel vision and missed a few global constraints. Please apply the following three fixes to the Equivalence Classes and the Test Case Coverage Matrix:
+
+Address SEC-07 (OTP Lifecycle): Add two new Invalid Equivalence Classes for the OTP (Input 2): O_EC7 (Expired 6-digit OTP) and O_EC8 (Already used 6-digit OTP). Create new test cases (TC21 and TC22) to test these specifically.
+
+Fix TC9 Data: Update the test data for TC9 to strictly match the "missing @" condition. Change the email input from test@eshop to testeshop.com.
+
+Add Whitespace Boundary (Confirm Password): Add a new test case (TC23) where the Confirm Password matches the New Password exactly, but includes an invisible trailing space (e.g., Aa1@bcde ) to ensure the system rejects it.
+
+Output the fully updated sections for STEP 2 and STEP 4 (Coverage Matrix) in Markdown format. Keep all previous valid logic intact.
+
+domain_testing_skill.md
 ```
 * **The AI output:** 
 ```markdown
+updated test plan for FR-03
 ```
 
 ## Interaction X
