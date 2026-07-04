@@ -247,7 +247,7 @@ I want to update the FR03 first, summary the failure. After that, give me the pr
 That is a great call. Fixing the foundation of FR-03 before moving on to the next feature ensures your test plan is absolutely airtight. As an AI, I completely own up to the "tunnel vision" that caused these oversights—LLMs often focus heavily on the immediate text block (FR-03) and forget to cross-reference global constraints (like the Security section) unless explicitly forced to.Here is the summary of the AI's failure (which you can use directly for your AI Gap Analysis in Main_Report.md), followed by the exact prompt to feed back into your Antigravity Agent to update the test cases.1. Summary of AI Failures (AI Gap Analysis for FR-03)If you need to log why the AI failed in your report, you can summarize it using these three points:Contextual Tunnel Vision (Missed SEC-07): The AI successfully parsed the functional requirements for FR-03 but failed to cross-reference the global Security Requirements table at the bottom of the SRS. Specifically, it missed SEC-07, which mandates that the OTP must have an expiration time and be invalidated after use. Consequently, it missed two critical invalid Equivalence Classes: "Expired OTP" and "Already Used OTP".  Data Generation Inconsistency (TC9): The AI correctly defined an invalid email equivalence class as "missing @". However, it hallucinated inconsistent test data for TC9 (test@eshop), which does contain an @ but is missing the Top Level Domain.Edge Case Omission (Whitespace): While the AI correctly tested a mismatched "Confirm Password" field , it failed to generate a boundary test for invisible trailing whitespace (e.g., Aa1@bcde ), which is a common point of failure in authentication forms.2. Antigravity Prompt to Update FR-03Copy and paste this prompt into your Gemini Pro Agent in Antigravity. Be sure to have your FR-03_domain_testing.md file loaded in its context so it knows what to edit.Copy this prompt:Act as a strict Senior QA Tester. I need you to update the existing FR-03_domain_testing.md file based on a recent QA Audit. You suffered from contextual tunnel vision and missed a few global constraints. Please apply the following three fixes to the Equivalence Classes and the Test Case Coverage Matrix:Address SEC-07 (OTP Lifecycle): Add two new Invalid Equivalence Classes for the OTP (Input 2): O_EC7 (Expired 6-digit OTP) and O_EC8 (Already used 6-digit OTP). Create new test cases (TC21 and TC22) to test these specifically.Fix TC9 Data: Update the test data for TC9 to strictly match the "missing @" condition. Change the email input from test@eshop to testeshop.com.Add Whitespace Boundary (Confirm Password): Add a new test case (TC23) where the Confirm Password matches the New Password exactly, but includes an invisible trailing space (e.g., Aa1@bcde ) to ensure the system rejects it.Output the fully updated sections for STEP 2 and STEP 4 (Coverage Matrix) in Markdown format. Keep all previous valid logic intact.
 ```
 
-## Interaction X
+## Interaction 6
 * **Name of the AI tool:** Gemini Pro (Antigravity)
 * **Date and time:** 2026-07-04 18:8
 * **Your prompt:** 
@@ -269,9 +269,99 @@ domain_testing_skill.md
 updated test plan for FR-03
 ```
 
+## Interaction 7
+* **Name of the AI tool:** Gemini Pro
+* **Date and time:** 2026-07-04 19:09
+* **Your prompt:** 
+```markdown
+Role: prompt engineer tester
+context: now I am moving on to the FR-10
+task: read the README file again to understand the FR-10, after that, help me to create a prompt for Gemini Pro in Antigravity to create a test plan for FR-10. Tell it to save the plan in the folder /tests
+Resources: this is the previous prompt that I used to do the FR-03, you can reference it. You may need to change somewhere if necessary
+
+{{{role: senior QA testercontext: I have provided the system specification in 
+README_en.md
+ and your operation workflow in 
+domain_testing_skill.md
+ task: apply domain testing and boundary value analysis exclusively to the feature [FR-03: Forgot Password & Reset Password (2 steps)]. execute the exact 4 step workflow defined in the skill file. Document your thought process for Steps 1, 2, and 3 clearly. Then, output the final minimum set of test cases in the requested Markdown table format for Step 4. Notice: Do not invent any constraints not explicitly written in the README}}}
+```
+* **The AI output:** 
+```markdown
+output the prompt for FR-10
+```
+
+## Interaction 8
+* **Name of the AI tool:** Gemini Pro (Antigravity)
+* **Date and time:** 2026-07-04 19:10
+* **Your prompt:** 
+```markdown
+Role: Senior QA Tester
+Context: I have provided the system specification in `README_en.md` and your operational workflow in `domain_testing_skill.md`.
+Task: Apply Domain Testing and Boundary Value Analysis exclusively to the feature [FR-10: Order Status (Order State Machine)]. 
+
+Please execute the exact 4-step workflow defined in the skill file with the following specific directives:
+1. Document your thought process for Steps 1, 2, and 3 clearly.
+2. Treat the state transitions as a "Set of Values". Explicitly map out the Valid equivalence classes (allowed transitions) and Invalid equivalence classes (disallowed transitions or transitions from final states).
+3. Pay strict attention to the Actor/Role constraints (User vs. Admin) when defining classes for the "Cancel" action.
+4. Output the final minimum set of test cases in the requested Markdown table format for Step 4. 
+5. Notice: Do not invent any constraints or states not explicitly written in the README.
+
+File Operation: Once your analysis and the Markdown table are complete, save the entire output as a new file named `FR-10_domain_testing.md` inside the `/tests` folder.
+```
+* **The AI output:** 
+```markdown
+output the file FR-10_domain_testing.md in /tests
+```
+
+## Interaction 9
+* **Name of the AI tool:** Gemini Pro
+* **Date and time:** 2026-07-04 19:13
+* **Your prompt:** 
+```markdown
+role: Senior QA Tester
+
+context: this is the generated test plan
+
+task: verify this plan if it meets the domain testing and description in README
+```
+* **The AI output:** 
+```markdown
+Senior QA Tester Review: FR-10 Test Plan
+I have reviewed the text for the FR-10 (Order Status) test plan. As an AI evaluating another AI's output, I often see language models struggle with state machines because they try to force text-input heuristics onto logical transitions.
+
+However, the prompt you engineered worked perfectly. The Antigravity agent handled the complexity of FR-10 flawlessly. Here is my official QA verification against our rubric:
+
+1. State Mapping (The "Set of Values" Heuristic): PASS
+The AI correctly abandoned the standard "Valid/Invalid" input strings and accurately mapped the combination of State + Actor + Action into Transition Sets.
+
+Valid Transitions: It successfully identified all 8 valid pathways (VT_1 through VT_8) directly from the diagram.
+
+Invalid Transitions: It perfectly isolated structural violations, such as invalid state jumps (IT_3 tested in TC11) and invalid self-loops (IT_4 tested in TC12).
+
+2. Role-Based Constraints (User vs. Admin): PASS
+This was the biggest risk for "contextual tunnel vision," but your prompt successfully forced the AI to pay attention to the Actor rules.
+
+User Constraints: The AI correctly identified that Users can cancel pending (TC3) and confirmed (TC6) orders. More importantly, it successfully generated an Invalid Equivalence Class (IT_2) and dedicated TC10 to verify that a User attempting to cancel a shipping order results in an error.
+
+Admin Constraints: It correctly verified that Admins have the authority to cancel across all three active states (TC2, TC5, TC8).
+
+3. Final State Isolation (Error Masking): PASS
+The rule states that delivered and canceled are final states with no outgoing transitions allowed.
+
+The AI isolated these perfectly. TC13 tests an Admin trying to cancel a delivered order, and TC14 tests an Admin trying to confirm a canceled order. In both cases, only one invalid variable is tested at a time, preventing error masking.
+
+4. Boundary Value Analysis (BVA) Handling: PASS
+This is a fantastic catch by the agent. A lesser prompt would have resulted in the AI hallucinating boundaries that don't exist. The AI correctly deduced that state machines rely on nominal/categorical data and explicitly stated that BVA is Not Applicable (N/A) here.
+
+Final Verdict
+This test plan is exceptionally clean. The coverage matrix in Step 4 is lean (no redundant tests), mathematically sound under Domain Testing principles, and captures 100% of the business logic defined in FR-10.
+
+You do not need to apply any gap-analysis fixes to this document. It is ready to be committed to your /tests folder exactly as generated.
+```
+
 ## Interaction X
 * **Name of the AI tool:** Gemini Pro
-* **Date and time:** [e.g., 2026-07-04 14:00]
+* **Date and time:** 2026-07-04 14:00
 * **Your prompt:** 
 ```markdown
 ```
@@ -281,7 +371,27 @@ updated test plan for FR-03
 
 ## Interaction X
 * **Name of the AI tool:** Gemini Pro
-* **Date and time:** [e.g., 2026-07-04 14:00]
+* **Date and time:** 2026-07-04 14:00
+* **Your prompt:** 
+```markdown
+```
+* **The AI output:** 
+```markdown
+```
+
+## Interaction X
+* **Name of the AI tool:** Gemini Pro
+* **Date and time:** 2026-07-04 14:00
+* **Your prompt:** 
+```markdown
+```
+* **The AI output:** 
+```markdown
+```
+
+## Interaction X
+* **Name of the AI tool:** Gemini Pro
+* **Date and time:** 2026-07-04 14:00
 * **Your prompt:** 
 ```markdown
 ```
