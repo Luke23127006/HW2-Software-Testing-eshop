@@ -32,6 +32,8 @@
 * **O_EC4 (Invalid):** Contains non-digit characters.
 * **O_EC5 (Invalid):** Length < 6 characters.
 * **O_EC6 (Invalid):** Length > 6 characters.
+* **O_EC7 (Invalid):** Expired 6-digit OTP.
+* **O_EC8 (Invalid):** Already used 6-digit OTP.
 
 **3. New Password (Input 3)**
 * *Rules applied: "Range" (>= 8 characters), "Must Be" (uppercase, lowercase, number), and "Set of Values" (special characters).*
@@ -75,23 +77,26 @@
 
 | TC ID | Partitions Tested | Boundary Status | Email | OTP | New Password | Confirm Password | Expected Output |
 |---|---|---|---|---|---|---|---|
-| **TC1** | E_EC1, O_EC1, CP_EC1, NP_EC1,2,3,4, **NP_EC5_1** (All Valid) | LB (OTP Length)<br>LB (NP Length) | `user@test.com` | `123456` | `Aa1@bcde` | `Aa1@bcde` | Success, password reset |
-| **TC2** | **NP_EC5_2** (Valid) | LB+1 (NP Length) | `user@test.com` | `123456` | `Aa1$bcdef` | `Aa1$bcdef` | Success, password reset |
-| **TC3** | **NP_EC5_3** (Valid) | None | `user@test.com` | `123456` | `Aa1!bcde` | `Aa1!bcde` | Success, password reset |
-| **TC4** | **NP_EC5_4** (Valid) | None | `user@test.com` | `123456` | `Aa1%bcde` | `Aa1%bcde` | Success, password reset |
-| **TC5** | **NP_EC5_5** (Valid) | None | `user@test.com` | `123456` | `Aa1*bcde` | `Aa1*bcde` | Success, password reset |
-| **TC6** | **NP_EC5_6** (Valid) | None | `user@test.com` | `123456` | `Aa1?bcde` | `Aa1?bcde` | Success, password reset |
-| **TC7** | **NP_EC5_7** (Valid) | None | `user@test.com` | `123456` | `Aa1&bcde` | `Aa1&bcde` | Success, password reset |
-| **TC8** | **E_EC2** (Invalid) | None | `unknown@test.com`| *(Not Reached)* | *(Not Reached)* | *(Not Reached)* | Error: Email not registered |
-| **TC9** | **E_EC3** (Invalid) | None | `user@domain` | *(Not Reached)* | *(Not Reached)* | *(Not Reached)* | Error: Invalid email format |
-| **TC10** | **O_EC2** (Invalid) | LB (OTP Length) | `user@test.com` | `654321` (Other's OTP) | `Aa1@bcde` | `Aa1@bcde` | Error: OTP invalid for this email |
-| **TC11** | **O_EC3** (Invalid) | LB (OTP Length) | `user@test.com` | `000000` (Wrong OTP) | `Aa1@bcde` | `Aa1@bcde` | Error: Incorrect OTP |
-| **TC12** | **O_EC4** (Invalid) | LB (OTP Length) | `user@test.com` | `12345a` | `Aa1@bcde` | `Aa1@bcde` | Error: Invalid OTP format |
-| **TC13** | **O_EC5** (Invalid) | **LB-1 (OTP Length)** | `user@test.com` | `12345` | `Aa1@bcde` | `Aa1@bcde` | Error: OTP must be 6 digits |
-| **TC14** | **O_EC6** (Invalid) | **LB+1 (OTP Length)** | `user@test.com` | `1234567` | `Aa1@bcde` | `Aa1@bcde` | Error: OTP must be 6 digits |
-| **TC15** | **NP_EC6** (Invalid) | **LB-1 (NP Length)** | `user@test.com` | `123456` | `Aa1@bcd` | `Aa1@bcd` | Error: Minimum 8 characters |
-| **TC16** | **NP_EC7** (Invalid) | LB (NP Length) | `user@test.com` | `123456` | `aa1@bcde` | `aa1@bcde` | Error: Requires uppercase |
-| **TC17** | **NP_EC8** (Invalid) | LB (NP Length) | `user@test.com` | `123456` | `AA1@BCDE` | `AA1@BCDE` | Error: Requires lowercase |
-| **TC18** | **NP_EC9** (Invalid) | LB (NP Length) | `user@test.com` | `123456` | `Aa@bcdef` | `Aa@bcdef` | Error: Requires number |
-| **TC19** | **NP_EC10** (Invalid) | LB (NP Length) | `user@test.com` | `123456` | `Aa1#bcde` | `Aa1#bcde` | Error: Requires allowed special char |
-| **TC20** | **CP_EC2** (Invalid) | LB (NP Length) | `user@test.com` | `123456` | `Aa1@bcde` | `Aa1@bcdd` | Error: Passwords do not match |
+| **TC1** | E_EC1, O_EC1, CP_EC1, NP_EC1,2,3,4, **NP_EC5_1** (All Valid) | LB (OTP Length)<br>LB (NP Length) | `test@eshop.com` | `[Displayed OTP]` | `Aa1@bcde` | `Aa1@bcde` | Success, password reset |
+| **TC2** | **NP_EC5_2** (Valid) | LB+1 (NP Length) | `test@eshop.com` | `[Displayed OTP]` | `Aa1$bcdef` | `Aa1$bcdef` | Success, password reset |
+| **TC3** | **NP_EC5_3** (Valid) | None | `test@eshop.com` | `[Displayed OTP]` | `Aa1!bcde` | `Aa1!bcde` | Success, password reset |
+| **TC4** | **NP_EC5_4** (Valid) | None | `test@eshop.com` | `[Displayed OTP]` | `Aa1%bcde` | `Aa1%bcde` | Success, password reset |
+| **TC5** | **NP_EC5_5** (Valid) | None | `test@eshop.com` | `[Displayed OTP]` | `Aa1*bcde` | `Aa1*bcde` | Success, password reset |
+| **TC6** | **NP_EC5_6** (Valid) | None | `test@eshop.com` | `[Displayed OTP]` | `Aa1?bcde` | `Aa1?bcde` | Success, password reset |
+| **TC7** | **NP_EC5_7** (Valid) | None | `test@eshop.com` | `[Displayed OTP]` | `Aa1&bcde` | `Aa1&bcde` | Success, password reset |
+| **TC8** | **E_EC2** (Invalid) | None | `unknown@eshop.com`| *(Not Reached)* | *(Not Reached)* | *(Not Reached)* | Error: Email not registered |
+| **TC9** | **E_EC3** (Invalid) | None | `testeshop.com` | *(Not Reached)* | *(Not Reached)* | *(Not Reached)* | Error: Invalid email format |
+| **TC10** | **O_EC2** (Invalid) | LB (OTP Length) | `test@eshop.com` | `[Other's OTP]` | `Aa1@bcde` | `Aa1@bcde` | Error: OTP invalid for this email |
+| **TC11** | **O_EC3** (Invalid) | LB (OTP Length) | `test@eshop.com` | `[Wrong OTP]` | `Aa1@bcde` | `Aa1@bcde` | Error: Incorrect OTP |
+| **TC12** | **O_EC4** (Invalid) | LB (OTP Length) | `test@eshop.com` | `12345a` | `Aa1@bcde` | `Aa1@bcde` | Error: Invalid OTP format |
+| **TC13** | **O_EC5** (Invalid) | **LB-1 (OTP Length)** | `test@eshop.com` | `12345` | `Aa1@bcde` | `Aa1@bcde` | Error: OTP must be 6 digits |
+| **TC14** | **O_EC6** (Invalid) | **LB+1 (OTP Length)** | `test@eshop.com` | `1234567` | `Aa1@bcde` | `Aa1@bcde` | Error: OTP must be 6 digits |
+| **TC15** | **NP_EC6** (Invalid) | **LB-1 (NP Length)** | `test@eshop.com` | `[Displayed OTP]` | `Aa1@bcd` | `Aa1@bcd` | Error: Minimum 8 characters |
+| **TC16** | **NP_EC7** (Invalid) | LB (NP Length) | `test@eshop.com` | `[Displayed OTP]` | `aa1@bcde` | `aa1@bcde` | Error: Requires uppercase |
+| **TC17** | **NP_EC8** (Invalid) | LB (NP Length) | `test@eshop.com` | `[Displayed OTP]` | `AA1@BCDE` | `AA1@BCDE` | Error: Requires lowercase |
+| **TC18** | **NP_EC9** (Invalid) | LB (NP Length) | `test@eshop.com` | `[Displayed OTP]` | `Aa@bcdef` | `Aa@bcdef` | Error: Requires number |
+| **TC19** | **NP_EC10** (Invalid) | LB (NP Length) | `test@eshop.com` | `[Displayed OTP]` | `Aa1#bcde` | `Aa1#bcde` | Error: Requires allowed special char |
+| **TC20** | **CP_EC2** (Invalid) | LB (NP Length) | `test@eshop.com` | `[Displayed OTP]` | `Aa1@bcde` | `Aa1@bcdd` | Error: Passwords do not match |
+| **TC21** | **O_EC7** (Invalid) | None | `test@eshop.com` | `[Expired OTP]` | `Aa1@bcde` | `Aa1@bcde` | Error: OTP expired |
+| **TC22** | **O_EC8** (Invalid) | None | `test@eshop.com` | `[Used OTP]` | `Aa1@bcde` | `Aa1@bcde` | Error: OTP already used |
+| **TC23** | **CP_EC2** (Invalid) | None | `test@eshop.com` | `[Displayed OTP]` | `Aa1@bcde` | `Aa1@bcde ` | Error: Passwords do not match |
