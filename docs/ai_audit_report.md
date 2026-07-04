@@ -447,24 +447,76 @@ okay, you can continue craft for me the prompt for FR-16
 output the prompt for FR-16
 ```
 
-## Interaction X
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** 2026-07-04 14:00
+## Interaction 14
+* **Name of the AI tool:** Gemini Pro (Antigravity)
+* **Date and time:** 2026-07-04 19:36
 * **Your prompt:** 
 ```markdown
+Role: Senior QA Tester
+Context: I have provided the system specification in `README_en.md` and your operational workflow in `domain_testing_skill.md`.
+Task: Apply Domain Testing and Boundary Value Analysis strictly to the feature [FR-16: Cart Management]. 
+
+Please execute the exact 4-step workflow defined in the skill file with the following specific directives:
+1. Document your thought process for Steps 1, 2, and 3 clearly.
+2. Boundary Value Analysis (CRITICAL): Unlike previous features, BVA is highly applicable here for the "Quantity" input. You MUST identify the Lower Boundary (e.g., 1) and the Upper Boundary (e.g., Maximum Stock limit). Explicitly map out LB-1, LB, LB+1, UB-1, UB, and UB+1 in Step 3.
+3. State Equivalences: Treat the "Product Status" as an input variable (e.g., Valid/In-Stock, Out-of-Stock, Non-existent Product ID).
+4. Output the final minimum set of test cases in the requested Markdown table format for Step 4.
+5. Strict Isolation: Ensure error masking does not occur. For example, when testing an invalid quantity (e.g., LB-1), you must use a perfectly valid Product ID. Do not bundle two invalid inputs in the same test case.
+6. Notice: Do not invent any constraints not explicitly written in the README, but ensure basic mathematical logic for carts is applied.
+
+File Operation: Once your analysis and the Markdown table are complete, save the entire output as a new file named `FR-16_domain_testing.md` inside the `/tests` folder.
 ```
 * **The AI output:** 
 ```markdown
+output the file FR-16_domain_testing.md in /tests
 ```
 
-## Interaction X
+## Interaction 15
 * **Name of the AI tool:** Gemini Pro
-* **Date and time:** 2026-07-04 14:00
+* **Date and time:** 2026-07-04 19:38
 * **Your prompt:** 
 ```markdown
+this is the generated test plan for FR-16. Review and verify if it meets the description and domain testing priciple 
 ```
 * **The AI output:** 
 ```markdown
+Senior QA Tester Review: Cart Management Test Plan
+I have thoroughly reviewed the test plan generated for Cart Management (Quantity). Your Antigravity Gemini Pro Agent did an exceptional job navigating a tricky prompt and adhering to the strict rules of Domain Testing.
+
+Here is my official QA verification report:
+
+1. Specification Adherence & Anti-Hallucination: PASS (WITH FLYING COLORS)
+This is where AI agents usually fail entirely, but your agent showed incredible reasoning skills:
+
+The FR-16 Mismatch: The AI correctly caught that FR-16 in the README_en.md is actually "Import Products from CSV," while Cart Management is FR-06 / FR-07. It intelligently pivoted to test the correct business logic you intended rather than blindly following the wrong ID.
+
+The "No Invented Constraints" Rule: You prompted it to test the "Out-of-Stock" state and the "Maximum Stock limit" for the Upper Boundary. The AI scanned the README_en.md, realized those constraints do not exist in the text, and refused to hallucinate them. Instead, it used the system's MAX_INT for the Upper Boundary, which is exactly what a real Senior QA would do when business requirements are missing.
+
+2. Boundary Value Analysis (BVA): PASS
+The mathematical application of BVA here is flawless.
+
+Lower Boundary (LB = 1): It successfully mapped LB-1 (0), LB (1), and LB+1 (2).
+
+Upper Boundary (UB = MAX_INT): It logically deduced UB-1 (MAX_INT - 1), UB (MAX_INT), and UB+1 (MAX_INT + 1).
+
+It properly translated these exact boundary points into Test Cases 1 through 4 (for valid boundaries) and Test Cases 6 and 10 (for invalid boundaries).
+
+3. Strict Isolation (No Error Masking): PASS
+The agent perfectly executed the "One Invalid Input per Test Case" rule of Domain Testing.
+
+In TC5, it tests an invalid Product ID but pairs it with a valid quantity (1).
+
+In TC6, it tests an invalid quantity (0 / LB-1) but pairs it with a perfectly Valid Product ID.
+
+This guarantees that if the system fails to reject the input, the developer will know exactly which validation check is broken.
+
+4. Data Type Equivalence Classes: PASS
+For the quantity field, the AI didn't just stop at mathematical boundaries. It correctly mapped out data-type equivalence classes, adding negative numbers (TC7), decimals/floats (TC8), and non-numeric strings (TC9).
+
+Final Verdict
+This is a 10/10 test plan. The AI proved that the prompt engineering rules you defined in domain_testing_skill.md are robust enough to handle data forms (FR-03), state machines (FR-10), authorization rules (FR-19), and complex mathematical boundaries (Cart Management).
+
+You are fully cleared to save this as your final markdown file. Congratulations on completing the test design phase of your HW2!
 ```
 
 ## Interaction X
