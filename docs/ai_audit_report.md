@@ -519,6 +519,95 @@ This is a 10/10 test plan. The AI proved that the prompt engineering rules you d
 You are fully cleared to save this as your final markdown file. Congratulations on completing the test design phase of your HW2!
 ```
 
+## Interaction 16
+* **Name of the AI tool:** Gemini Pro
+* **Date and time:** 2026-07-04 20:05
+* **Your prompt:** 
+```markdown
+give me the prompt to tell AI to update the main report, here is the current template:
+
+# Main Report: Domain Testing & Boundary Value Analysis
+
+## Feature 1: FR-03 (Forgot password and password reset)
+### 1. Domain Testing
+* **Step 1: Input/Output Variables**
+  * Inputs: [List inputs]
+  * Outputs: [List outputs]
+* **Step 2: Equivalence Classes**
+  * Valid: [List valid partitions]
+  * Invalid: [List invalid partitions]
+* **Step 3: Test Case Selection**
+  * [Brief explanation of how test cases were selected to cover valid/invalid classes]
+
+### 2. Boundary Value Analysis
+* **Step 4: Boundary Identification**
+  * [List boundaries identified: LB-1, LB, LB+1, etc.]
+
+### 3. AI Gap Analysis
+* **Missed Test Cases/Bugs:** [Describe what AI missed]
+* **Reason:** [Explain why: Prompt quality / AI limitation / Feature complexity]
+
+*(Repeat the exact same structure for FR-10, FR-19, and FR-16)*
+```
+* **The AI output:** 
+```markdown
+output the prompt
+```
+
+## Interaction 17
+* **Name of the AI tool:** Gemini Pro (Antigravity)
+* **Date and time:** 2026-07-04 20:08
+* **Your prompt:** 
+```markdown
+Role: Technical Documentation Specialist / Senior QA Tester
+Context: We have successfully generated the Domain Testing and BVA plans for our four selected features: FR-03, FR-10, FR-19, and FR-16. These files are saved in the `/tests` directory.
+Task: Consolidate the methodology and findings from these four files into the final `Main_Report.md` document.
+
+Please execute the following directives:
+1. Read the contents of `FR-03_domain_testing.md`, `FR-10_domain_testing.md`, `FR-19_domain_testing.md`, and `FR-16_domain_testing.md`.
+2. Extract the Inputs, Outputs, Equivalence Classes (Valid/Invalid), Test Case Selection rationale, and BVA logic from each file to compactly populate Sections 1 and 2 of the template.
+3. For Section 3 (AI Gap Analysis), you MUST use the following specific QA audit notes:
+   * **FR-03:** - Missed Test Cases: Missed global security constraint SEC-07 (OTP expiration/reused lifecycle), generated inconsistent test data for the "missing @" class (`test@eshop`), and missed the invisible trailing whitespace boundary for Confirm Password.
+     - Reason: Contextual tunnel vision. The AI focused solely on the specific feature block and failed to cross-reference the global security requirements table.
+   * **FR-10:** - Missed Test Cases: None. 
+     - Reason: The AI executed perfectly, successfully mapping the state machine transitions as a "Set of Values" and handling Actor constraints without hallucination.
+   * **FR-19:** - Missed Test Cases: None. 
+     - Reason: The AI flawlessly cross-referenced global authorization rules (SEC-03) and correctly isolated the business logic for the Admin "Self-Deletion" constraint.
+   * **FR-16:** - Missed Test Cases: None. 
+     - Reason: The AI correctly applied BVA math (LB, UB=MAX_INT) to the Cart Quantity and successfully avoided hallucinating unwritten inventory/stock constraints.
+
+4. Format the output using the exact template below and save it as `Main_Report.md` in the root directory.
+
+### TEMPLATE TO FOLLOW:
+
+# Main Report: Domain Testing & Boundary Value Analysis
+
+## Feature: [Feature ID & Name]
+### 1. Domain Testing
+* **Step 1: Input/Output Variables**
+  * Inputs: [List inputs compactly]
+  * Outputs: [List outputs compactly]
+* **Step 2: Equivalence Classes**
+  * Valid: [List valid partitions]
+  * Invalid: [List invalid partitions]
+* **Step 3: Test Case Selection**
+  * [Brief 1-2 sentence explanation of how test cases were selected to cover valid/invalid classes while avoiding error masking]
+
+### 2. Boundary Value Analysis
+* **Step 4: Boundary Identification**
+  * [List boundaries identified: LB-1, LB, LB+1, etc., or state "Not Applicable" with a brief reason]
+
+### 3. AI Gap Analysis
+* **Missed Test Cases/Bugs:** [Insert notes provided above]
+* **Reason:** [Insert notes provided above]
+
+*(Repeat this structure sequentially for FR-03, FR-10, FR-19, and FR-16)*
+```
+* **The AI output:** 
+```markdown
+output the main_report.md in /docs
+```
+
 ## Interaction X
 * **Name of the AI tool:** Gemini Pro
 * **Date and time:** 2026-07-04 14:00
