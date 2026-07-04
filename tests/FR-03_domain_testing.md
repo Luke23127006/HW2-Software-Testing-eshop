@@ -1,43 +1,4 @@
-# AI Audit Report
-
-## Interaction 1
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** 2026-07-04 13:56
-* **Your prompt:** 
-```markdown
-README.md
-setup_guide.md
- translate this into english, creating README_en.md and setup_guide_en.md
-```
-* **The AI output:** 
-```markdown
-I have successfully translated both README.md and setup_guide.md into English. You can find the translated versions in the newly created files:
-
-
-README_en.md
-
-setup_guide_en.md
-Let me know if you need any adjustments to the translations or further assistance!
-```
-
-## Interaction 2
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** 2026-07-04 14:05
-* **Your prompt:** 
-```markdown
-role: senior QA tester
-context: I have provided the system specification in 
-
-README_en.md
- and your operation workflow in 
-
-domain_testing_skill.md
- 
-task: apply domain testing and boundary value analysis exclusively to the feature [FR-03: Forgot Password & Reset Password (2 steps)]. execute the exact 4 step workflow defined in the skill file. Document your thought process for Steps 1, 2, and 3 clearly. Then, output the final minimum set of test cases in the requested Markdown table format for Step 4. Notice: Do not invent any constraints not explicitly written in the README
-```
-* **The AI output:** 
-```markdown
-Here is the documented thought process and domain testing analysis for **FR-03: Forgot Password & Reset Password (2 steps)**, following the principles of Domain Testing and Boundary Value Analysis as requested.
+# Domain Testing & Boundary Value Analysis: FR-03 Forgot Password & Reset Password
 
 ### STEP 1: Identify Input & Output Variables
 
@@ -74,10 +35,10 @@ Here is the documented thought process and domain testing analysis for **FR-03: 
 
 **3. New Password (Input 3)**
 * *Rules applied: "Range" (>= 8 characters), "Must Be" (uppercase, lowercase, number), and "Set of Values" (special characters).*
-* **NP_EC1 (Valid):** Length $\ge$ 8.
-* **NP_EC2 (Valid):** Contains $\ge$ 1 uppercase letter.
-* **NP_EC3 (Valid):** Contains $\ge$ 1 lowercase letter.
-* **NP_EC4 (Valid):** Contains $\ge$ 1 number.
+* **NP_EC1 (Valid):** Length >= 8.
+* **NP_EC2 (Valid):** Contains >= 1 uppercase letter.
+* **NP_EC3 (Valid):** Contains >= 1 lowercase letter.
+* **NP_EC4 (Valid):** Contains >= 1 number.
 * **NP_EC5_1 to NP_EC5_7 (Valid Set):** Contains at least one of the specified special characters (`@`, `$`, `!`, `%`, `*`, `?`, `&` — 7 distinct valid classes).
 * **NP_EC6 (Invalid):** Length < 8.
 * **NP_EC7 (Invalid):** Missing uppercase letter.
@@ -134,64 +95,3 @@ Here is the documented thought process and domain testing analysis for **FR-03: 
 | **TC18** | **NP_EC9** (Invalid) | LB (NP Length) | `user@test.com` | `123456` | `Aa@bcdef` | `Aa@bcdef` | Error: Requires number |
 | **TC19** | **NP_EC10** (Invalid) | LB (NP Length) | `user@test.com` | `123456` | `Aa1#bcde` | `Aa1#bcde` | Error: Requires allowed special char |
 | **TC20** | **CP_EC2** (Invalid) | LB (NP Length) | `user@test.com` | `123456` | `Aa1@bcde` | `Aa1@bcdd` | Error: Passwords do not match |
-```
-
-## Interaction X
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** [e.g., 2026-07-04 14:00]
-* **Your prompt:** 
-```markdown
-```
-* **The AI output:** 
-```markdown
-```
-
-## Interaction X
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** [e.g., 2026-07-04 14:00]
-* **Your prompt:** 
-```markdown
-```
-* **The AI output:** 
-```markdown
-```
-
-## Interaction X
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** [e.g., 2026-07-04 14:00]
-* **Your prompt:** 
-```markdown
-```
-* **The AI output:** 
-```markdown
-```
-
-## Interaction X
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** [e.g., 2026-07-04 14:00]
-* **Your prompt:** 
-```markdown
-```
-* **The AI output:** 
-```markdown
-```
-
-## Interaction X
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** [e.g., 2026-07-04 14:00]
-* **Your prompt:** 
-```markdown
-```
-* **The AI output:** 
-```markdown
-```
-
-## Interaction X
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** [e.g., 2026-07-04 14:00]
-* **Your prompt:** 
-```markdown
-```
-* **The AI output:** 
-```markdown
-```
