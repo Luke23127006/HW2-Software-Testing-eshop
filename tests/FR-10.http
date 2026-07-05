@@ -1,0 +1,108 @@
+@baseUrl = http://localhost:3000
+
+### ---------------------------------------------------------
+### SETUP: AUTHENTICATION
+### ---------------------------------------------------------
+
+### Login as Admin
+# @name adminLogin
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "email": "admin@eshop.com",
+  "password": "Admin123!"
+}
+
+### Login as User
+# @name userLogin
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "email": "test@eshop.com",
+  "password": "Test1234!"
+}
+
+### Extract tokens to variables
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzgzMjQxMzc4fQ.IrweznAAsZ6ZfQSKP2vnXkMNbWpWC1UeiKfitpAOL8E
+@userToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6InVzZXIiLCJpYXQiOjE3ODMyNDEzOTF9.ySlG8qK51n9YrZTFKMEhHeTbTqENBmxRF5YNKN7GQqU
+
+### ---------------------------------------------------------
+### VARIABLES: ORDER IDs FOR TESTING
+### Replace these with actual Order IDs in the corresponding states
+### ---------------------------------------------------------
+@pending_order_id = 6
+@confirmed_order_id = 4
+@shipping_order_id = 3
+@delivered_order_id = 2
+@canceled_order_id = 1
+
+### ---------------------------------------------------------
+### TEST CASES (TC9 - TC15) - INVALID TRANSITIONS
+### ---------------------------------------------------------
+
+### TC9: User tries Admin action (IT_1)
+### Current State: pending, Actor: User, Action: Confirm -> Expected Error: Unauthorized action
+PUT {{baseUrl}}/api/admin/orders/{{pending_order_id}}/status
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "status": "confirmed"
+}
+
+### TC10: User tries restricted cancel (IT_2)
+### Current State: shipping, Actor: User, Action: Cancel -> Expected Error: Users cannot cancel shipped orders
+PUT {{baseUrl}}/api/orders/{{shipping_order_id}}/cancel
+Authorization: Bearer {{userToken}}
+
+### TC11: Invalid logical jump (IT_3)
+### Current State: pending, Actor: Admin, Action: Ship -> Expected Error: Invalid transition
+PUT {{baseUrl}}/api/admin/orders/{{pending_order_id}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "shipping"
+}
+
+### TC12: Invalid self-loop (IT_4)
+### Current State: confirmed, Actor: Admin, Action: Confirm -> Expected Error: Invalid transition
+PUT {{baseUrl}}/api/admin/orders/{{confirmed_order_id}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "confirmed"
+}
+
+### TC13: Final State (IT_5)
+### Current State: delivered, Actor: Admin, Action: Cancel -> Expected Error: Final state, no transitions allowed
+PUT {{baseUrl}}/api/admin/orders/{{delivered_order_id}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "canceled"
+}
+
+### TC14: Final State (IT_6)
+### Current State: canceled, Actor: Admin, Action: Confirm -> Expected Error: Final state, no transitions allowed
+PUT {{baseUrl}}/api/admin/orders/{{canceled_order_id}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "confirmed"
+}
+
+### TC15: Invalid Action (ACT_EC5)
+### Current State: pending, Actor: Admin, Action: Refund -> Expected Error: Unrecognized action
+PUT {{baseUrl}}/api/admin/orders/{{pending_order_id}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "refund"
+}
