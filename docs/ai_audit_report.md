@@ -692,24 +692,51 @@ The file includes:
 You can find and execute the tests here: [FR-10.http](file:///d:/Software%20Engineer/Sofware%20Testing/HW2/eshop-sut/tests/FR-10.http) using the VS Code REST Client extension. Let me know if you need any changes or additional tests!
 ```
 
-## Interaction X
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** 2026-07-04 14:00
+## Interaction 20
+* **Name of the AI tool:** Gemini Pro (Antigravity)
+* **Date and time:** 2026-07-05 23:37
 * **Your prompt:** 
 ```markdown
+
+FR-16_domain_testing.md
+ 
+
+README_en.md
+ the FR-16 is import from csv, modify this test case file
+
 ```
 * **The AI output:** 
 ```markdown
+Viewed FR-16_domain_testing.md:1-72
+Edited FR-16_domain_testing.md
+
+I have completely rewritten `FR-16_domain_testing.md` to properly address the **Import Products from CSV** feature as specified in `README_en.md`, replacing the previous incorrect analysis on Cart Management.
+
+The updated file now includes:
+- **Input Variables**: Identifies file extension, header format, RFC 4180 comma support, and row data validations (Name and Price), alongside the transaction rollback constraint.
+- **Equivalence Classes**: Covers valid and invalid formats (e.g., CSV vs. TXT, correct headers vs. missing headers, positive vs. negative prices).
+- **Boundary Value Analysis**: Specifically targets the boundaries for Price ($>0$) and Name (length $>0$).
+- **Test Case Matrix**: Provides 9 thorough test cases ensuring atomic rollback (testing if mixing valid and invalid rows correctly rejects the entire import), checking the file format, and verifying data boundaries.
+
+You can view the updated file here: [FR-16_domain_testing.md](file:///d:/Software%20Engineer/Sofware%20Testing/HW2/eshop-sut/tests/FR-16_domain_testing.md)
 ```
 
-## Interaction X
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** 2026-07-04 14:00
+## Interaction 21
+* **Name of the AI tool:** Gemini Pro (Antigravity)
+* **Date and time:** 2026-07-05 23:59
 * **Your prompt:** 
 ```markdown
+
+template_import.csv
+ 
+
+FR-16_domain_testing.md
+ 
+based on this template csv, for each test case of FR-16, create a corresponding file to test
 ```
 * **The AI output:** 
 ```markdown
+
 ```
 
 ## Interaction X

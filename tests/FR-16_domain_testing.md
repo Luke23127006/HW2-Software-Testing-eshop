@@ -1,66 +1,87 @@
-# Domain Testing & Boundary Value Analysis: Cart Management (Quantity)
-*(Note: The prompt requests testing for "FR-16: Cart Management". In the provided README, FR-16 is actually "Import Products from CSV," while Cart Management is covered under FR-06 and FR-07. The following analysis strictly applies Domain Testing to the Cart/Quantity features based on your specific directives).*
+# Domain Testing & Boundary Value Analysis: FR-16 Import Products from CSV
 
 ### STEP 1: Identify Input & Output Variables
 
 **Input Variables:**
-1. **Product Status (ID)**: The identifier/state of the product being added or updated in the cart.
-2. **Quantity**: The requested number of items.
+
+1. **File Extension**: The format/extension of the uploaded file.
+2. **File Header**: The first row of the uploaded CSV.
+3. **Data Format**: Handling of commas inside values (RFC 4180).
+4. **Row Data - Name**: The `name` field in a product row.
+5. **Row Data - Price**: The `price` field in a product row.
+6. **Transaction Context**: The combination of valid and invalid rows in a single file upload.
 
 **Output Variables & Expected Outcomes:**
-- **Success:** Product is added or cart quantity is updated; visual feedback (toast/badge) is displayed (per FR-06/FR-24).
-- **Error:** System rejects the action with an appropriate message (e.g., "Invalid quantity", "Product not found").
+
+- **Success:** All rows are valid. The import succeeds, products are added, and a success report is displayed.
+- **Error (File Level):** File is rejected due to invalid extension or invalid headers.
+- **Error (Row Level & Rollback):** If _any_ row is invalid, the entire import is rolled back (no products added). A report is displayed showing successful vs. failed rows and reasons for failure.
 
 ---
 
 ### STEP 2: Identify Equivalence Classes (Sub-domains)
 
-**1. Input: Product Status**
-* *Rule applied: "Must Be" condition (Must be a valid existing product).* 
-* *(CRITICAL COMPLIANCE NOTE: The README does not define inventory management, stock levels, or an "Out-of-Stock" state. Adhering strictly to the directive "Do not invent any constraints not explicitly written in the README", inventory/stock states are excluded from these equivalence classes).*
-* **PS_EC1 (Valid):** Valid, existing Product ID.
-* **PS_EC2 (Invalid):** Non-existent Product ID.
+**1. Input: File Extension (EXT)**
 
-**2. Input: Quantity**
-* *Rule applied: "Range" & "Must Be" (Must be a positive integer, minimum 1).*
-* **QTY_EC1 (Valid):** Integer $\ge 1$.
-* **QTY_EC2 (Invalid):** $0$.
-* **QTY_EC3 (Invalid):** Negative integers ($< 0$).
-* **QTY_EC4 (Invalid):** Non-integer numbers (decimals/floats).
-* **QTY_EC5 (Invalid):** Non-numeric characters (e.g., letters, symbols).
+- **EXT_EC1 (Valid):** `.csv`
+- **EXT_EC2 (Invalid):** Non-csv extensions (e.g., `.txt`, `.xlsx`, `.pdf`)
+
+**2. Input: File Header (HDR)**
+
+- **HDR_EC1 (Valid):** Exactly `name,price,description,imageUrl,category_id`
+- **HDR_EC2 (Invalid):** Missing headers, extra headers, or incorrect spelling/order.
+
+**3. Input: Data Format (RFC 4180) (FMT)**
+
+- **FMT_EC1 (Valid):** Standard comma-separated fields without internal commas.
+- **FMT_EC2 (Valid):** Fields containing commas, correctly enclosed in double quotes (e.g., `"Product, Red"`).
+- **FMT_EC3 (Invalid):** Fields containing commas NOT enclosed in double quotes (causes column mismatch).
+
+**4. Input: Row Data - Name (NAME)**
+
+- **NAME_EC1 (Valid):** Non-empty string.
+- **NAME_EC2 (Invalid):** Empty string.
+
+**5. Input: Row Data - Price (PRICE)**
+
+- **PRICE_EC1 (Valid):** Positive number ($> 0$).
+- **PRICE_EC2 (Invalid):** Zero or negative number ($\le 0$).
+- **PRICE_EC3 (Invalid):** Non-numeric string (e.g., "abc").
+
+**6. Input: Transaction & Rollback (TX)**
+
+- **TX_EC1 (Valid):** File contains 100% valid rows.
+- **TX_EC2 (Invalid):** File contains a mix of valid rows and at least one invalid row.
 
 ---
 
 ### STEP 3: Boundary Value Analysis
 
-**Quantity Boundaries**
+**1. Price Boundaries**
 
-* **Lower Boundary (LB = 1):** The README explicitly states "minimum is 1".
-  * **LB-1 (Invalid):** `0` (Maps to QTY_EC2)
-  * **LB (Valid):** `1` (Maps to QTY_EC1)
-  * **LB+1 (Valid):** `2` (Maps to QTY_EC1)
+- The constraint is: "price must be a positive number" ($> 0$).
+- **LB-1 (Invalid):** `0` (Maps to PRICE_EC2)
+- **LB (Valid):** `1` (or `0.01` depending on smallest currency unit; using `1` as standard minimum for $\ge 1$). (Maps to PRICE_EC1)
+- **Negative Value (Invalid):** `-1` (Maps to PRICE_EC2)
 
-* **Upper Boundary (UB = `MAX_INT`):** 
-  * *(CRITICAL COMPLIANCE NOTE: The README explicitly lacks any "Maximum Stock limit". To strictly obey the rule not to invent business constraints, there is no business UB. However, to fulfill the BVA directive using basic mathematical/system logic, the UB is defined as the system's maximum allowable integer, denoted here as `MAX_INT`).*
-  * **UB-1 (Valid):** `MAX_INT - 1`
-  * **UB (Valid):** `MAX_INT`
-  * **UB+1 (Invalid):** `MAX_INT + 1` (System integer overflow / technical rejection).
+**2. Name Boundaries (Length)**
+
+- The constraint is: "name cannot be empty".
+- **LB (Invalid):** Empty string `""` (Length = 0).
+- **LB+1 (Valid):** String with 1 character `"A"` (Length = 1).
 
 ---
 
 ### STEP 4: Select Test Cases (Coverage Matrix)
 
-*Note: Per strict isolation rules, invalid inputs are tested one at a time alongside a perfectly valid Product ID to prevent error masking.*
-
-| TC ID | Partitions Tested | Boundary Status | Product Status | Quantity | Expected Output | Actual | Status |
-|---|---|---|---|---|---|---|---|
-| **TC1** | PS_EC1, QTY_EC1 (Valid) | **LB** (Quantity) | Valid Product ID | `1` | Success: Added to cart, toast/badge updated | | |
-| **TC2** | PS_EC1, QTY_EC1 (Valid) | **LB+1** (Quantity) | Valid Product ID | `2` | Success: Added to cart, toast/badge updated | | |
-| **TC3** | PS_EC1, QTY_EC1 (Valid) | **UB-1** (Quantity) | Valid Product ID | `MAX_INT - 1` | Success: Added to cart, toast/badge updated | | |
-| **TC4** | PS_EC1, QTY_EC1 (Valid) | **UB** (Quantity) | Valid Product ID | `MAX_INT` | Success: Added to cart, toast/badge updated | | |
-| **TC5** | **PS_EC2** (Invalid) | LB (Quantity) | Non-existent Product ID | `1` | Error: Product not found | | |
-| **TC6** | **QTY_EC2** (Invalid) | **LB-1** (Quantity) | Valid Product ID | `0` | Error: Quantity must be at least 1 | | |
-| **TC7** | **QTY_EC3** (Invalid) | N/A | Valid Product ID | `-5` | Error: Quantity must be a positive integer | | |
-| **TC8** | **QTY_EC4** (Invalid) | N/A | Valid Product ID | `1.5` | Error: Quantity must be an integer | | |
-| **TC9** | **QTY_EC5** (Invalid) | N/A | Valid Product ID | `abc` | Error: Invalid quantity format | | |
-| **TC10** | **System Limit** (Invalid)| **UB+1** (Quantity) | Valid Product ID | `MAX_INT + 1` | Error: Quantity exceeds system limits | | |
+| TC ID   | Partitions Tested                                          | Boundary Status                 | File/Header                  | Row Data (Name, Price)                              | Transaction Context           | Expected Output                                                                                  | Actual | Status |
+| ------- | ---------------------------------------------------------- | ------------------------------- | ---------------------------- | --------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------ | ------ | ------ |
+| **TC1** | EXT_EC1, HDR_EC1, FMT_EC1, NAME_EC1, PRICE_EC1, TX_EC1     | **LB+1** (Name), **LB** (Price) | Valid `.csv`, Valid Header   | Name: `"A"`, Price: `1`                             | All rows valid                | Success: All rows imported. Report shows 100% success.                                           |        |        |
+| **TC2** | EXT_EC1, HDR_EC1, **FMT_EC2**, NAME_EC1, PRICE_EC1, TX_EC1 | N/A                             | Valid `.csv`, Valid Header   | Name: `"Product, with comma"`, Price: `100`         | All rows valid                | Success: Product imported correctly without splitting the name field.                            |        |        |
+| **TC3** | **EXT_EC2** (Invalid File Type)                            | N/A                             | Invalid `.txt` file          | N/A                                                 | N/A                           | Error: File format not supported / must be `.csv`.                                               |        |        |
+| **TC4** | **HDR_EC2** (Invalid Header)                               | N/A                             | Valid `.csv`, Invalid Header | N/A                                                 | N/A                           | Error: Invalid CSV header format.                                                                |        |        |
+| **TC5** | **NAME_EC2** (Invalid Name)                                | **LB** (Name Length = 0)        | Valid `.csv`, Valid Header   | Name: `""`, Price: `100`                            | 1 invalid row                 | Error: Name cannot be empty. Import rolled back.                                                 |        |        |
+| **TC6** | **PRICE_EC2** (Invalid Price)                              | **LB-1** (Price = 0)            | Valid `.csv`, Valid Header   | Name: `"Test"`, Price: `0`                          | 1 invalid row                 | Error: Price must be positive. Import rolled back.                                               |        |        |
+| **TC7** | **PRICE_EC2** (Invalid Price)                              | N/A                             | Valid `.csv`, Valid Header   | Name: `"Test"`, Price: `-50`                        | 1 invalid row                 | Error: Price must be positive. Import rolled back.                                               |        |        |
+| **TC8** | **PRICE_EC3** (Non-numeric Price)                          | N/A                             | Valid `.csv`, Valid Header   | Name: `"Test"`, Price: `"abc"`                      | 1 invalid row                 | Error: Price must be a valid number. Import rolled back.                                         |        |        |
+| **TC9** | **TX_EC2** (Atomic Rollback Test)                          | N/A                             | Valid `.csv`, Valid Header   | Row 1: Valid Name/Price<br>Row 2: Invalid Price `0` | Mix of valid and invalid rows | Error: Entire import rolled back. Report: 1 success, 1 fail. 0 products actually imported to DB. |        |        |

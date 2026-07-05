@@ -1,0 +1,4 @@
+name,price,description,imageUrl,category_id
+Valid Product 1,100,Mô tả sản phẩm,https://placehold.co/300,1
+Invalid Product 2,0,Mô tả sản phẩm,https://placehold.co/300,1
+Valid Product 3,200,Mô tả sản phẩm,https://placehold.co/300,1
