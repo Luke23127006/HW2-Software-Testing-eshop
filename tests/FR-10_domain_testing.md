@@ -68,20 +68,20 @@ Because a State Machine relies heavily on the combination of current state, acto
 
 *Note: In state machine testing, each valid transition must be tested individually. Invalid transitions are isolated to ensure error masking does not occur.*
 
-| TC ID | Partitions Tested | Boundary Status | Current State | Actor | Requested Action | Expected Output |
-|---|---|---|---|---|---|---|
-| **TC1** | CS_EC1, A_EC1, ACT_EC1 (VT_1) | N/A | `pending` | `Admin` | `Confirm` | Success: State changes to `confirmed` |
-| **TC2** | CS_EC1, A_EC1, ACT_EC4 (VT_2) | N/A | `pending` | `Admin` | `Cancel` | Success: State changes to `canceled` |
-| **TC3** | CS_EC1, A_EC2, ACT_EC4 (VT_3) | N/A | `pending` | `User` | `Cancel` | Success: State changes to `canceled` |
-| **TC4** | CS_EC2, A_EC1, ACT_EC2 (VT_4) | N/A | `confirmed` | `Admin` | `Ship` | Success: State changes to `shipping` |
-| **TC5** | CS_EC2, A_EC1, ACT_EC4 (VT_5) | N/A | `confirmed` | `Admin` | `Cancel` | Success: State changes to `canceled` |
-| **TC6** | CS_EC2, A_EC2, ACT_EC4 (VT_6) | N/A | `confirmed` | `User` | `Cancel` | Success: State changes to `canceled` |
-| **TC7** | CS_EC3, A_EC1, ACT_EC3 (VT_7) | N/A | `shipping` | `Admin` | `Complete` | Success: State changes to `delivered` |
-| **TC8** | CS_EC3, A_EC1, ACT_EC4 (VT_8) | N/A | `shipping` | `Admin` | `Cancel` | Success: State changes to `canceled` |
-| **TC9** | **IT_1** (User tries Admin action) | N/A | `pending` | `User` | `Confirm` | Error: Unauthorized action |
-| **TC10** | **IT_2** (User tries restricted cancel)| N/A | `shipping` | `User` | `Cancel` | Error: Users cannot cancel shipped orders |
-| **TC11** | **IT_3** (Invalid logical jump) | N/A | `pending` | `Admin` | `Ship` | Error: Invalid transition |
-| **TC12** | **IT_4** (Invalid self-loop) | N/A | `confirmed` | `Admin` | `Confirm` | Error: Invalid transition |
-| **TC13** | **CS_EC4**, **IT_5** (Final State) | N/A | `delivered` | `Admin` | `Cancel` | Error: Final state, no transitions allowed |
-| **TC14** | **CS_EC5**, **IT_6** (Final State) | N/A | `canceled` | `Admin` | `Confirm` | Error: Final state, no transitions allowed |
-| **TC15** | **ACT_EC5** (Invalid Action) | N/A | `pending` | `Admin` | `Refund` | Error: Unrecognized action |
+| TC ID | Partitions Tested | Boundary Status | Current State | Actor | Requested Action | Expected Output | Actual | Status |
+|---|---|---|---|---|---|---|---|---|
+| **TC1** | CS_EC1, A_EC1, ACT_EC1 (VT_1) | N/A | `pending` | `Admin` | `Confirm` | Success: State changes to `confirmed` | | |
+| **TC2** | CS_EC1, A_EC1, ACT_EC4 (VT_2) | N/A | `pending` | `Admin` | `Cancel` | Success: State changes to `canceled` | | |
+| **TC3** | CS_EC1, A_EC2, ACT_EC4 (VT_3) | N/A | `pending` | `User` | `Cancel` | Success: State changes to `canceled` | | |
+| **TC4** | CS_EC2, A_EC1, ACT_EC2 (VT_4) | N/A | `confirmed` | `Admin` | `Ship` | Success: State changes to `shipping` | | |
+| **TC5** | CS_EC2, A_EC1, ACT_EC4 (VT_5) | N/A | `confirmed` | `Admin` | `Cancel` | Success: State changes to `canceled` | | |
+| **TC6** | CS_EC2, A_EC2, ACT_EC4 (VT_6) | N/A | `confirmed` | `User` | `Cancel` | Success: State changes to `canceled` | | |
+| **TC7** | CS_EC3, A_EC1, ACT_EC3 (VT_7) | N/A | `shipping` | `Admin` | `Complete` | Success: State changes to `delivered` | | |
+| **TC8** | CS_EC3, A_EC1, ACT_EC4 (VT_8) | N/A | `shipping` | `Admin` | `Cancel` | Success: State changes to `canceled` | | |
+| **TC9** | **IT_1** (User tries Admin action) | N/A | `pending` | `User` | `Confirm` | Error: Unauthorized action | | |
+| **TC10** | **IT_2** (User tries restricted cancel)| N/A | `shipping` | `User` | `Cancel` | Error: Users cannot cancel shipped orders | | |
+| **TC11** | **IT_3** (Invalid logical jump) | N/A | `pending` | `Admin` | `Ship` | Error: Invalid transition | | |
+| **TC12** | **IT_4** (Invalid self-loop) | N/A | `confirmed` | `Admin` | `Confirm` | Error: Invalid transition | | |
+| **TC13** | **CS_EC4**, **IT_5** (Final State) | N/A | `delivered` | `Admin` | `Cancel` | Error: Final state, no transitions allowed | | |
+| **TC14** | **CS_EC5**, **IT_6** (Final State) | N/A | `canceled` | `Admin` | `Confirm` | Error: Final state, no transitions allowed | | |
+| **TC15** | **ACT_EC5** (Invalid Action) | N/A | `pending` | `Admin` | `Refund` | Error: Unrecognized action | | |

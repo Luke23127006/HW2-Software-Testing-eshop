@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  backend:
+    image: node:20
+    container_name: eshop-backend
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+      # Anonymous volume for node_modules to avoid host (Windows) vs container (Linux) binary conflicts (like sqlite3)
+      - backend_node_modules:/app/node_modules
+    ports:
+      - "3000:3000"
+    command: sh -c "cp -r /app /tmp/app_run && cd /tmp/app_run && npm install --build-from-source=sqlite3 && node server.js"
+
+  frontend-web:
+    image: node:20
+    container_name: eshop-frontend-web
+    working_dir: /app
+    volumes:
+      - ./frontend-web:/app
+      - web_node_modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host"
+    depends_on:
+      - backend
+
+  frontend-admin:
+    image: node:20
+    container_name: eshop-frontend-admin
+    working_dir: /app
+    volumes:
+      - ./frontend-admin:/app
+      - admin_node_modules:/app/node_modules
+    ports:
+      - "5174:5174"
+    command: sh -c "npm install && npm run dev -- --host"
+    depends_on:
+      - backend
+
+  frontend-mobile:
+    image: node:20
+    container_name: eshop-frontend-mobile
+    working_dir: /app
+    volumes:
+      - ./frontend-mobile:/app
+      - mobile_node_modules:/app/node_modules
+    ports:
+      - "8081:8081"
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+    environment:
+      - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+    command: sh -c "npm install && npx expo start"
+    depends_on:
+      - backend
+
+volumes:
+  backend_node_modules:
+  web_node_modules:
+  admin_node_modules:
+  mobile_node_modules:

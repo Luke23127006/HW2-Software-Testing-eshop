@@ -52,15 +52,15 @@
 
 *Note: Per strict isolation rules, invalid inputs are tested one at a time alongside a perfectly valid Product ID to prevent error masking.*
 
-| TC ID | Partitions Tested | Boundary Status | Product Status | Quantity | Expected Output |
-|---|---|---|---|---|---|
-| **TC1** | PS_EC1, QTY_EC1 (Valid) | **LB** (Quantity) | Valid Product ID | `1` | Success: Added to cart, toast/badge updated |
-| **TC2** | PS_EC1, QTY_EC1 (Valid) | **LB+1** (Quantity) | Valid Product ID | `2` | Success: Added to cart, toast/badge updated |
-| **TC3** | PS_EC1, QTY_EC1 (Valid) | **UB-1** (Quantity) | Valid Product ID | `MAX_INT - 1` | Success: Added to cart, toast/badge updated |
-| **TC4** | PS_EC1, QTY_EC1 (Valid) | **UB** (Quantity) | Valid Product ID | `MAX_INT` | Success: Added to cart, toast/badge updated |
-| **TC5** | **PS_EC2** (Invalid) | LB (Quantity) | Non-existent Product ID | `1` | Error: Product not found |
-| **TC6** | **QTY_EC2** (Invalid) | **LB-1** (Quantity) | Valid Product ID | `0` | Error: Quantity must be at least 1 |
-| **TC7** | **QTY_EC3** (Invalid) | N/A | Valid Product ID | `-5` | Error: Quantity must be a positive integer |
-| **TC8** | **QTY_EC4** (Invalid) | N/A | Valid Product ID | `1.5` | Error: Quantity must be an integer |
-| **TC9** | **QTY_EC5** (Invalid) | N/A | Valid Product ID | `abc` | Error: Invalid quantity format |
-| **TC10** | **System Limit** (Invalid)| **UB+1** (Quantity) | Valid Product ID | `MAX_INT + 1` | Error: Quantity exceeds system limits |
+| TC ID | Partitions Tested | Boundary Status | Product Status | Quantity | Expected Output | Actual | Status |
+|---|---|---|---|---|---|---|---|
+| **TC1** | PS_EC1, QTY_EC1 (Valid) | **LB** (Quantity) | Valid Product ID | `1` | Success: Added to cart, toast/badge updated | | |
+| **TC2** | PS_EC1, QTY_EC1 (Valid) | **LB+1** (Quantity) | Valid Product ID | `2` | Success: Added to cart, toast/badge updated | | |
+| **TC3** | PS_EC1, QTY_EC1 (Valid) | **UB-1** (Quantity) | Valid Product ID | `MAX_INT - 1` | Success: Added to cart, toast/badge updated | | |
+| **TC4** | PS_EC1, QTY_EC1 (Valid) | **UB** (Quantity) | Valid Product ID | `MAX_INT` | Success: Added to cart, toast/badge updated | | |
+| **TC5** | **PS_EC2** (Invalid) | LB (Quantity) | Non-existent Product ID | `1` | Error: Product not found | | |
+| **TC6** | **QTY_EC2** (Invalid) | **LB-1** (Quantity) | Valid Product ID | `0` | Error: Quantity must be at least 1 | | |
+| **TC7** | **QTY_EC3** (Invalid) | N/A | Valid Product ID | `-5` | Error: Quantity must be a positive integer | | |
+| **TC8** | **QTY_EC4** (Invalid) | N/A | Valid Product ID | `1.5` | Error: Quantity must be an integer | | |
+| **TC9** | **QTY_EC5** (Invalid) | N/A | Valid Product ID | `abc` | Error: Invalid quantity format | | |
+| **TC10** | **System Limit** (Invalid)| **UB+1** (Quantity) | Valid Product ID | `MAX_INT + 1` | Error: Quantity exceeds system limits | | |
