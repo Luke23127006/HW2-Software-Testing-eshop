@@ -24,4 +24,4 @@
   - Failed: [Number]
   - Not yet executed: [Number]
 - **Number of bugs found:** [Number]
-- **Demo Video (Agent Skill):** [Insert YouTube Link Here]
+- **Demo Video (Agent Skill):** [https://youtu.be/qI90yYGvLVw](https://youtu.be/qI90yYGvLVw)
