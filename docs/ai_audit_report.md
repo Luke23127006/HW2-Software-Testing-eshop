@@ -676,6 +676,20 @@ README_en.md
 ```
 * **The AI output:** 
 ```markdown
+Viewed FR-10_domain_testing.md:1-95
+Viewed api_specification.md:1-215
+Viewed README_en.md:1-289
+Listed directory tests
+Created FR-10.http
+
+I have created the `FR-10.http` file for you in the `tests` directory based on the provided documents. 
+
+The file includes:
+1. **Authentication Setup**: Setup block to easily authenticate as both `Admin` and `User` to extract their respective tokens.
+2. **Order Variables**: Placeholder variables for the Order IDs in the required initial states (`pending`, `confirmed`, `shipping`, `delivered`, `canceled`). You can replace these with the exact IDs you've seeded or created before testing.
+3. **TC9 to TC15**: The corresponding `PUT` requests mapping to the test cases. They explicitly use the correct tokens (User or Admin), target the appropriate route (`/api/admin/orders/:id/status` vs `/api/orders/:id/cancel`), and supply the expected payload (`status`).
+
+You can find and execute the tests here: [FR-10.http](file:///d:/Software%20Engineer/Sofware%20Testing/HW2/eshop-sut/tests/FR-10.http) using the VS Code REST Client extension. Let me know if you need any changes or additional tests!
 ```
 
 ## Interaction X
