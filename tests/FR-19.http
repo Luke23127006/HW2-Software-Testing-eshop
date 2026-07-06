@@ -1,0 +1,72 @@
+@baseUrl = http://localhost:3000
+@adminEmail = admin@eshop.com
+@adminPassword = Admin123!
+@userEmail = test@eshop.com
+@userPassword = Test1234!
+
+# Based on database.js seed data:
+@adminId = 1
+@targetUserId = 3
+
+### 0a. Admin Login (To get Admin JWT Token)
+# @name adminLogin
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "email": "{{adminEmail}}",
+  "password": "{{adminPassword}}"
+}
+
+### Extract Admin Token
+@adminToken = {{adminLogin.response.body.token}}
+
+### 0b. Normal User Login (To get User JWT Token)
+# @name userLogin
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "email": "{{userEmail}}",
+  "password": "{{userPassword}}"
+}
+
+### Extract User Token
+@userToken = {{userLogin.response.body.token}}
+
+---
+
+### TC1: View User List (Valid Admin) - A_EC1, ACT_EC1, TID_EC3
+# Expected: Success (200 OK) with list of users, passwords hidden.
+GET {{baseUrl}}/api/admin/users
+Authorization: Bearer {{adminToken}}
+
+### TC2: Delete User (Valid Admin, Other User) - A_EC1, ACT_EC2, TID_EC1
+# Expected: Success (200 OK), user is deleted.
+# Note: targetUserId is 2 (Test User)
+DELETE {{baseUrl}}/api/admin/users/{{targetUserId}}
+Authorization: Bearer {{adminToken}}
+
+### TC3: View User List (Invalid Role - Normal User) - A_EC2
+# Expected: Error 403 Forbidden (Requires Admin)
+GET {{baseUrl}}/api/admin/users
+Authorization: Bearer {{userToken}}
+
+### TC4: Delete User (Invalid Role - Normal User) - A_EC2
+# Expected: Error 403 Forbidden (Requires Admin)
+DELETE {{baseUrl}}/api/admin/users/4
+Authorization: Bearer {{userToken}}
+
+### TC5: View User List (Unauthenticated) - A_EC3
+# Expected: Error 401 Unauthorized (Token required)
+GET {{baseUrl}}/api/admin/users
+
+### TC6: Delete User (Unauthenticated) - A_EC3
+# Expected: Error 401 Unauthorized (Token required)
+DELETE {{baseUrl}}/api/admin/users/4
+
+### TC7: Admin Self-Deletion (Invalid Target - Self) - TID_EC2
+# Expected: Error (Cannot delete currently logged-in account)
+# Note: adminId is 1 (Admin User)
+DELETE {{baseUrl}}/api/admin/users/{{adminId}}
+Authorization: Bearer {{adminToken}}

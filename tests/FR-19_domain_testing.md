@@ -51,12 +51,12 @@
 
 _Note: Valid classes are combined to test happy paths. Invalid classes (Actor/Role constraints and the Self-Deletion constraint) are isolated. For example, when testing the invalid "Self-Deletion" constraint, the request uses a perfectly valid Admin token to ensure an authorization failure does not mask the self-deletion logic failure._
 
-| TC ID   | Partitions Tested               | Boundary Status | Actor/Role      | Action         | Target User ID | Expected Output                                  | Actual | Status |
-| ------- | ------------------------------- | --------------- | --------------- | -------------- | -------------- | ------------------------------------------------ | ------ | ------ |
-| **TC1** | A_EC1, ACT_EC1, TID_EC3 (Valid) | N/A             | Valid Admin     | View User List | N/A            | Success: Returns user list (passwords hidden)    |        |        |
-| **TC2** | A_EC1, ACT_EC2, TID_EC1 (Valid) | N/A             | Valid Admin     | Delete User    | Other User     | Success: User is deleted                         |        |        |
-| **TC3** | **A_EC2** (Invalid)             | N/A             | Valid User      | View User List | N/A            | Error: Forbidden (Requires Admin)                |        |        |
-| **TC4** | **A_EC2** (Invalid)             | N/A             | Valid User      | Delete User    | Other User     | Error: Forbidden (Requires Admin)                |        |        |
-| **TC5** | **A_EC3** (Invalid)             | N/A             | Unauthenticated | View User List | N/A            | Error: Unauthorized (Token required)             |        |        |
-| **TC6** | **A_EC3** (Invalid)             | N/A             | Unauthenticated | Delete User    | Other User     | Error: Unauthorized (Token required)             |        |        |
-| **TC7** | **TID_EC2** (Invalid)           | N/A             | Valid Admin     | Delete User    | **Self**       | Error: Cannot delete currently logged-in account |        |        |
+| TC ID   | Partitions Tested               | Boundary Status | Actor/Role      | Action         | Target User ID | Expected Output                                  | Actual              | Status |
+| ------- | ------------------------------- | --------------- | --------------- | -------------- | -------------- | ------------------------------------------------ | ------------------- | ------ |
+| **TC1** | A_EC1, ACT_EC1, TID_EC3 (Valid) | N/A             | Valid Admin     | View User List | N/A            | Success: Returns user list (passwords hidden)    | Meet expectation    | Pass   |
+| **TC2** | A_EC1, ACT_EC2, TID_EC1 (Valid) | N/A             | Valid Admin     | Delete User    | Other User     | Success: User is deleted                         | Meet expectation    | Pass   |
+| **TC3** | **A_EC2** (Invalid)             | N/A             | Valid User      | View User List | N/A            | Error: Forbidden (Requires Admin)                | Returns user list   | Fail   |
+| **TC4** | **A_EC2** (Invalid)             | N/A             | Valid User      | Delete User    | Other User     | Error: Forbidden (Requires Admin)                | User is deleted     | Fail   |
+| **TC5** | **A_EC3** (Invalid)             | N/A             | Unauthenticated | View User List | N/A            | Error: Unauthorized (Token required)             | Error: Unauthorized | Pass   |
+| **TC6** | **A_EC3** (Invalid)             | N/A             | Unauthenticated | Delete User    | Other User     | Error: Unauthorized (Token required)             | Error: Unauthorized | Pass   |
+| **TC7** | **TID_EC2** (Invalid)           | N/A             | Valid Admin     | Delete User    | **Self**       | Error: Cannot delete currently logged-in account | Admin is deleted    | Fail   |

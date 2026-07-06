@@ -757,6 +757,24 @@ api_specification.md
 ```markdown
 ```
 
+## Interaction 23
+* **Name of the AI tool:** Gemini Pro
+* **Date and time:** 2026-07-06 12:00
+* **Your prompt:** 
+```markdown
+FR-19_domain_testing.md
+ 
+
+api_specification.md
+ create 
+
+README_en.md
+ FR-19.http to test all the test cases
+```
+* **The AI output:** 
+```markdown
+```
+
 ## Interaction X
 * **Name of the AI tool:** Gemini Pro
 * **Date and time:** 2026-07-04 14:00
