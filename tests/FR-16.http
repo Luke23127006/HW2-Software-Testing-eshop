@@ -1,0 +1,168 @@
+@baseUrl = http://localhost:3000
+@adminEmail = admin@eshop.com
+@adminPassword = Admin123!
+
+### 0. Admin Login (Required to get JWT Token)
+# @name adminLogin
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "email": "{{adminEmail}}",
+  "password": "{{adminPassword}}"
+}
+
+### Extract token for subsequent requests
+@token = {{adminLogin.response.body.token}}
+
+---
+# Note on API Specification (Section 6.3):
+# The API endpoint `POST /api/admin/import-products` accepts a JSON array of products (`{ "products": [...] }`).
+# This means the Frontend Web Admin is responsible for:
+# 1. Validating the file extension (.csv)
+# 2. Reading and validating the CSV headers
+# 3. Parsing the CSV format (RFC 4180) into a JSON array
+# 4. Sending the JSON array to the Backend.
+# Therefore, TC3 and TC4 are UI/Frontend-level tests and do not result in API calls.
+---
+
+### TC1: Valid Import (EXT_EC1, HDR_EC1, FMT_EC1, NAME_EC1, PRICE_EC1, TX_EC1)
+# Frontend successfully parsed valid CSV and sends JSON.
+# Boundary: Name="A" (LB+1), Price=1 (LB)
+POST {{baseUrl}}/api/admin/import-products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "name": "A",
+      "price": 1,
+      "description": "Valid Product",
+      "imageUrl": "http://image.com/1.jpg",
+      "category_id": 1
+    }
+  ]
+}
+
+### TC2: Valid Import with Commas in Data (FMT_EC2)
+# Frontend successfully parsed "Product, with comma" from CSV and sends it.
+POST {{baseUrl}}/api/admin/import-products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "name": "Product, with comma",
+      "price": 100,
+      "description": "Valid Description",
+      "imageUrl": "http://image.com/2.jpg",
+      "category_id": 1
+    }
+  ]
+}
+
+### TC3: Invalid File Type (.txt) (EXT_EC2)
+# Frontend should block this before making an API call.
+# No HTTP Request.
+
+### TC4: Invalid Header (HDR_EC2)
+# Frontend should detect this during CSV parsing and block the API call.
+# No HTTP Request.
+
+### TC5: Invalid Name - Empty String (NAME_EC2)
+# Boundary: Name="" (LB)
+POST {{baseUrl}}/api/admin/import-products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "name": "",
+      "price": 100,
+      "description": "Invalid Name Product",
+      "imageUrl": "http://image.com/3.jpg",
+      "category_id": 1
+    }
+  ]
+}
+
+### TC6: Invalid Price - Zero (PRICE_EC2)
+# Boundary: Price=0 (LB-1)
+POST {{baseUrl}}/api/admin/import-products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "name": "Test Product",
+      "price": 0,
+      "description": "Invalid Price Zero",
+      "imageUrl": "http://image.com/4.jpg",
+      "category_id": 1
+    }
+  ]
+}
+
+### TC7: Invalid Price - Negative (PRICE_EC2)
+POST {{baseUrl}}/api/admin/import-products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "name": "Test Product",
+      "price": -50,
+      "description": "Invalid Price Negative",
+      "imageUrl": "http://image.com/5.jpg",
+      "category_id": 1
+    }
+  ]
+}
+
+### TC8: Invalid Price - Non-numeric (PRICE_EC3)
+POST {{baseUrl}}/api/admin/import-products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "name": "Test Product",
+      "price": "abc",
+      "description": "Invalid Price Type",
+      "imageUrl": "http://image.com/6.jpg",
+      "category_id": 1
+    }
+  ]
+}
+
+### TC9: Transaction Context - Atomic Rollback Test (TX_EC2)
+# Mix of 1 valid row and 1 invalid row.
+# The Backend MUST rollback the entire transaction (0 products inserted).
+POST {{baseUrl}}/api/admin/import-products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "name": "Valid Product in Batch",
+      "price": 100,
+      "description": "This should NOT be saved",
+      "imageUrl": "http://image.com/7.jpg",
+      "category_id": 1
+    },
+    {
+      "name": "Invalid Product in Batch",
+      "price": 0,
+      "description": "Causes entire batch to fail",
+      "imageUrl": "http://image.com/8.jpg",
+      "category_id": 1
+    }
+  ]
+}

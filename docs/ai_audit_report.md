@@ -736,14 +736,22 @@ based on this template csv, for each test case of FR-16, create a corresponding 
 ```
 * **The AI output:** 
 ```markdown
-
 ```
 
-## Interaction X
+## Interaction 22
 * **Name of the AI tool:** Gemini Pro
-* **Date and time:** 2026-07-04 14:00
+* **Date and time:** 2026-07-06 10:33
 * **Your prompt:** 
 ```markdown
+
+FR-16_domain_testing.md
+ 
+
+README_en.md
+ 
+
+api_specification.md
+ based on api spec, create FR-16.http to tell all the test cases
 ```
 * **The AI output:** 
 ```markdown
