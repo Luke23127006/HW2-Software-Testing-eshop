@@ -774,13 +774,3 @@ README_en.md
 * **The AI output:** 
 ```markdown
 ```
-
-## Interaction X
-* **Name of the AI tool:** Gemini Pro
-* **Date and time:** 2026-07-04 14:00
-* **Your prompt:** 
-```markdown
-```
-* **The AI output:** 
-```markdown
-```
